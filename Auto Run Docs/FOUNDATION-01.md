@@ -53,7 +53,7 @@
 
 ## Task 2 — Install and configure Expo Router with tab and stack navigation shells
 
-- [ ] Install Expo Router and its peer dependencies: `npm install expo-router react-native-safe-area-context react-native-screens expo-linking expo-constants expo-status-bar`. Update `package.json` `"main"` field to `"expo-router/entry"`. Update `app.json` to add `"scheme": "recipemaker"` and set `"web": { "bundler": "metro" }` under the `expo` key. Create `app/_layout.tsx` as a root Stack layout that wraps the app in `<SafeAreaProvider>`. Create `app/(tabs)/_layout.tsx` as a `<Tabs>` navigator with five tabs: **Home** (`index`), **Recipes** (`recipes`), **Collections** (`collections`), **Search** (`search`), **Settings** (`settings`) — each tab should have an appropriate `title` and placeholder `tabBarIcon`. Create placeholder screen files for each tab:
+- [x] Install Expo Router and its peer dependencies: `npm install expo-router react-native-safe-area-context react-native-screens expo-linking expo-constants expo-status-bar`. Update `package.json` `"main"` field to `"expo-router/entry"`. Update `app.json` to add `"scheme": "recipemaker"` and set `"web": { "bundler": "metro" }` under the `expo` key. Create `app/_layout.tsx` as a root Stack layout that wraps the app in `<SafeAreaProvider>`. Create `app/(tabs)/_layout.tsx` as a `<Tabs>` navigator with five tabs: **Home** (`index`), **Recipes** (`recipes`), **Collections** (`collections`), **Search** (`search`), **Settings** (`settings`) — each tab should have an appropriate `title` and placeholder `tabBarIcon`. Create placeholder screen files for each tab:
   - `app/(tabs)/index.tsx` — Home (renders `<Text>Home</Text>`)
   - `app/(tabs)/recipes.tsx` — Recipes
   - `app/(tabs)/collections.tsx` — Collections

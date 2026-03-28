@@ -23,7 +23,9 @@
       },
       "predictiveBackGestureEnabled": false
     },
+    "scheme": "recipemaker",
     "web": {
+      "bundler": "metro",
       "favicon": "./assets/favicon.png"
     }
   }
