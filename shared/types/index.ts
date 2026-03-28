@@ -137,3 +137,4 @@ export interface SyncQueueEntry {
 }
 
 export * from './schemas'
+export type { RecipeFilters } from '../../features/search/query-builder'
