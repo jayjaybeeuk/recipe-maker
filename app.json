@@ -27,6 +27,17 @@
     "web": {
       "bundler": "metro",
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-sqlite",
+        {
+          "enableFTS": true,
+          "useSQLCipher": false,
+          "android": { "enableCustomBuildFlags": false },
+          "ios": { "customBuildFlags": [] }
+        }
+      ]
+    ]
   }
 }
