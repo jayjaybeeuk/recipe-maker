@@ -383,7 +383,7 @@
 
 ## Task 6 — Build Add Recipe and Edit Recipe screens with React Hook Form
 
-- [ ] Install `@hookform/resolvers` is already included in Task 1. Build a shared form component `features/recipes/components/RecipeForm.tsx` used by both Add and Edit screens. The form uses `useForm` from `react-hook-form` with `zodResolver(recipeFormSchema)` from `@hookform/resolvers/zod`.
+- [x] Install `@hookform/resolvers` is already included in Task 1. Build a shared form component `features/recipes/components/RecipeForm.tsx` used by both Add and Edit screens. The form uses `useForm` from `react-hook-form` with `zodResolver(recipeFormSchema)` from `@hookform/resolvers/zod`.
 
   Form sections (rendered in a `ScrollView`):
 
