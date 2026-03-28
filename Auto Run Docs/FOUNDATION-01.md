@@ -124,7 +124,7 @@
 
 ## Task 5 — Install and configure Zustand store structure
 
-- [ ] Install Zustand: `npm install zustand`. Create the following store slice files — each should export a typed Zustand slice with placeholder state and actions (fully typed, no `any`):
+- [x] Install Zustand: `npm install zustand`. Create the following store slice files — each should export a typed Zustand slice with placeholder state and actions (fully typed, no `any`):
 
   - `features/recipes/store.ts` — `RecipeStore` with: `recipes: Recipe[]`, `selectedRecipeId: string | null`, `isLoading: boolean`, `error: string | null`, actions: `setRecipes`, `setSelectedRecipe`, `setLoading`, `setError`
   - `features/search/store.ts` — `SearchStore` with: `searchText: string`, `cuisine: string | null`, `mealType: string | null`, `tags: string[]`, `isFavorite: boolean`, `maxTotalMinutes: number | null`, `sortBy: SortOption` (type: `'newest' | 'updated' | 'favorite' | 'quickest' | 'rated' | 'lastCooked'`), actions: `setSearchText`, `setCuisine`, `setMealType`, `toggleTag`, `setIsFavorite`, `setMaxTotalMinutes`, `setSortBy`, `clearAll`
