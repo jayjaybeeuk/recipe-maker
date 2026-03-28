@@ -7,6 +7,7 @@
 ---
 
 ## Context for all tasks
+
 - Stack: React Native + Expo (SDK 52+), TypeScript, Expo Router, NativeWind, React Native Reusables (`rnr`), Zustand, Expo SQLite, Vitest
 - Supabase is **Phase 5** — do not install or configure it here
 - Use `npm` for all package management
@@ -102,7 +103,6 @@
 ## Task 4 — Install and configure React Native Reusables (rnr) core primitives
 
 - [x] Install React Native Reusables and its dependencies. RNR uses a copy-paste model — install the CLI and then add the required primitives. Run: `npm install @rn-primitives/portal @rn-primitives/slot`. Then manually create the following `rnr` components in `shared/components/ui/` by following the React Native Reusables source patterns for NativeWind — create each as a proper TypeScript component file:
-
   - `button.tsx` — Button component with `variant` prop (`default`, `outline`, `ghost`, `destructive`) and `size` prop (`sm`, `default`, `lg`)
   - `card.tsx` — Card, CardHeader, CardContent, CardFooter, CardTitle, CardDescription components
   - `input.tsx` — Input component wrapping TextInput with NativeWind styling and error state support
@@ -125,7 +125,6 @@
 ## Task 5 — Install and configure Zustand store structure
 
 - [x] Install Zustand: `npm install zustand`. Create the following store slice files — each should export a typed Zustand slice with placeholder state and actions (fully typed, no `any`):
-
   - `features/recipes/store.ts` — `RecipeStore` with: `recipes: Recipe[]`, `selectedRecipeId: string | null`, `isLoading: boolean`, `error: string | null`, actions: `setRecipes`, `setSelectedRecipe`, `setLoading`, `setError`
   - `features/search/store.ts` — `SearchStore` with: `searchText: string`, `cuisine: string | null`, `mealType: string | null`, `tags: string[]`, `isFavorite: boolean`, `maxTotalMinutes: number | null`, `sortBy: SortOption` (type: `'newest' | 'updated' | 'favorite' | 'quickest' | 'rated' | 'lastCooked'`), actions: `setSearchText`, `setCuisine`, `setMealType`, `toggleTag`, `setIsFavorite`, `setMaxTotalMinutes`, `setSortBy`, `clearAll`
   - `features/cooking/store.ts` — `CookingStore` with: `session: ActiveCookingSession | null`, `currentStepIndex: number`, `timers: Record<string, TimerState>`, actions: `setSession`, `setCurrentStep`, `startTimer`, `cancelTimer`, `clearSession`
@@ -273,15 +272,11 @@
 
 ## Task 7 — Configure ESLint, Prettier, and TypeScript strict mode
 
-- [ ] Install dev dependencies: `npm install -D eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-config-expo prettier eslint-config-prettier eslint-plugin-prettier`. Create `.eslintrc.js` at the project root:
+- [x] Install dev dependencies: `npm install -D eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-config-expo prettier eslint-config-prettier eslint-plugin-prettier`. Create `.eslintrc.js` at the project root:
 
   ```js
   module.exports = {
-    extends: [
-      'expo',
-      'plugin:@typescript-eslint/recommended',
-      'prettier',
-    ],
+    extends: ['expo', 'plugin:@typescript-eslint/recommended', 'prettier'],
     plugins: ['@typescript-eslint', 'prettier'],
     rules: {
       'prettier/prettier': 'error',
@@ -319,6 +314,7 @@
   ```
 
   Add scripts to `package.json`:
+
   ```json
   "lint": "eslint . --ext .ts,.tsx --max-warnings 0",
   "format": "prettier --write .",
@@ -373,6 +369,7 @@
   ```
 
   Add test scripts to `package.json`:
+
   ```json
   "test": "vitest run",
   "test:watch": "vitest",

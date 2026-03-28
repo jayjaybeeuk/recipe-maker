@@ -26,10 +26,7 @@ export function Badge({
 }: BadgeProps) {
   const v = variantClasses[variant]
   return (
-    <View
-      className={`inline-flex px-2 py-0.5 rounded-full ${v.container} ${className}`}
-      {...props}
-    >
+    <View className={`inline-flex px-2 py-0.5 rounded-full ${v.container} ${className}`} {...props}>
       <Text className={`text-xs font-medium ${v.text} ${textClassName}`}>{children}</Text>
     </View>
   )

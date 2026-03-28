@@ -3,9 +3,11 @@
 > Context: Personal recipe catalogue app. Stack: React Native + Expo, TypeScript, Expo Router, Zustand, SQLite (Expo SQLite), Supabase, Zod, React Hook Form, NativeWind. See 00-master-spec.md for full constraints. Data model in 03-data-model-and-storage.md. CRUD in 05-recipes-crud.md.
 
 ## Goal
+
 Make the app genuinely useful while cooking — not just for recipe storage.
 
 ## Session Lifecycle
+
 1. User taps "Start Cooking" on Recipe Detail screen
 2. App creates or resumes `ActiveCookingSession` for this recipeId
 3. Cooking Mode screen opens (`app/(stack)/recipes/[id]/cook.tsx`)
@@ -15,13 +17,14 @@ Make the app genuinely useful while cooking — not just for recipe storage.
 7. App navigates back to Recipe Detail
 
 ## ActiveCookingSession Fields
+
 ```typescript
 interface ActiveCookingSession {
   id: string
   recipeId: string
-  servingsOverride: number | null   // null = use recipe.servings
-  checkedIngredientIds: string      // JSON array e.g. '["id1","id2"]'
-  checkedStepIds: string            // JSON array e.g. '["id3"]'
+  servingsOverride: number | null // null = use recipe.servings
+  checkedIngredientIds: string // JSON array e.g. '["id1","id2"]'
+  checkedStepIds: string // JSON array e.g. '["id3"]'
   startedAt: string
   updatedAt: string
   completedAt: string | null
@@ -29,6 +32,7 @@ interface ActiveCookingSession {
 ```
 
 ## Servings Scaling Rules
+
 - Scale factor = `servingsOverride / recipe.servings`
 - Apply to numeric `quantity` fields only
 - Quantities that are null or zero are left unchanged
@@ -36,6 +40,7 @@ interface ActiveCookingSession {
 - Scaling is display-only — does not mutate stored ingredient data
 
 ## Timer Behavior
+
 - Steps with `durationMinutes > 0` show a "Start Timer" button
 - Tapping starts a countdown timer displayed in-screen
 - Support multiple concurrent timers (one per step)
@@ -43,6 +48,7 @@ interface ActiveCookingSession {
 - Show visual alert and vibration when timer completes (use `expo-haptics` and local notification or in-app alert)
 
 ## UX Requirements
+
 - Large typography: body minimum 18sp, step instructions minimum 22sp
 - Minimum touch target: 44x44pt for all interactive elements
 - Servings adjuster: minus / value / plus row at top of screen
@@ -54,6 +60,7 @@ interface ActiveCookingSession {
 - Minimal chrome — hide non-essential navigation elements
 
 ## Cooking Mode Zustand Store
+
 ```typescript
 interface CookingStore {
   session: ActiveCookingSession | null
@@ -61,7 +68,7 @@ interface CookingStore {
   ingredients: Ingredient[]
   steps: Step[]
   currentStepIndex: number
-  timers: Record<string, TimerState>   // stepId → timer
+  timers: Record<string, TimerState> // stepId → timer
   startSession(recipeId: string): Promise<void>
   resumeSession(session: ActiveCookingSession): void
   toggleIngredient(ingredientId: string): void
@@ -83,11 +90,13 @@ interface TimerState {
 ```
 
 ## Persistence Strategy
+
 - On every checklist toggle or servings change: write updated `ActiveCookingSession` to SQLite immediately
 - On session complete: set `completedAt` on session, update `recipe.lastCookedAt`, enqueue sync mutation
 - On app resume: check for incomplete session for current recipeId and resume if found
 
 ## Implementation Tasks
+
 - [ ] Build Cooking Mode screen `app/(stack)/recipes/[id]/cook.tsx` with large-typography layout, servings adjuster, ingredients checklist, steps checklist with timer buttons, previous/next step navigation, and "Mark as Cooked" CTA
 - [ ] Implement `CookingSessionRepository` in `infra/db/repositories/cooking-session-repository.ts` with createOrResume, update (persist checklist state), complete (set completedAt and update recipe.lastCookedAt), and getActiveForRecipe methods
 - [ ] Implement Cooking Mode Zustand store in `features/cooking/store.ts` including timer state management with per-step countdown, toggleIngredient (update SQLite + store), toggleStep (update SQLite + store), setServingsOverride, completeSession

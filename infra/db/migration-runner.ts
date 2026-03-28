@@ -3,7 +3,7 @@ import * as SQLite from 'expo-sqlite'
 // In React Native / Expo, files cannot be read dynamically at runtime via fs.
 // Migrations are registered here statically, sorted lexicographically by name.
 // Each .sql file in infra/db/migrations/ must have a corresponding entry below.
-const MIGRATIONS: Array<{ name: string; sql: string }> = [
+const MIGRATIONS: { name: string; sql: string }[] = [
   {
     name: '001_initial_schema.sql',
     sql: `

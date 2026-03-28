@@ -1,10 +1,13 @@
 # Recipe Catalogue App - Master Technical Specification
 
 ## Objective
+
 Build a personal, cross-platform recipe catalogue application for iOS, Android, and desktop using TypeScript. The app should allow the user to store, organize, search, and interact with favorite recipes in a polished, mobile-first experience.
 
 ## Product Vision
+
 Create a private digital cookbook optimized for:
+
 - saving favorite recipes
 - finding them quickly
 - using them practically during cooking
@@ -12,10 +15,12 @@ Create a private digital cookbook optimized for:
 - working offline in the kitchen
 
 ## Primary User
+
 One primary user initially: the owner's wife.
 Secondary future mode: optional family/shared household access.
 
 ## Core Product Principles
+
 1. Fast to capture recipes
 2. Fast to retrieve recipes
 3. Excellent in-kitchen usability
@@ -24,12 +29,14 @@ Secondary future mode: optional family/shared household access.
 6. One TypeScript codebase across platforms
 
 ## Platform Targets
+
 - iOS
 - Android
 - Desktop
 - Optional web build
 
 ## Recommended Stack
+
 - App framework: React Native with Expo
 - Language: TypeScript
 - Navigation: Expo Router
@@ -47,13 +54,16 @@ Secondary future mode: optional family/shared household access.
   - Phase 2: package desktop with Tauri if needed
 
 ## Component Library Strategy
+
 shadcn/ui runs on Radix UI (DOM-only) and cannot be used directly in React Native. The solution across this codebase:
+
 - **iOS/Android**: use React Native Reusables (`rnr`) — same copy-paste model, same shadcn API conventions, built on NativeWind
 - **Expo web build**: use shadcn/ui components where the DOM renderer is available
 - Prefer `rnr` components as the default; fall back to custom NativeWind components only when `rnr` does not provide a suitable primitive
 - Component names and API should mirror shadcn/ui conventions (e.g., `Button`, `Card`, `Input`, `Sheet`, `Dialog`) so web and native implementations stay structurally consistent
 
 ## Why this stack
+
 - One TS codebase
 - Strong mobile support
 - Good offline/local DB options
@@ -63,7 +73,9 @@ shadcn/ui runs on Radix UI (DOM-only) and cannot be used directly in React Nativ
 - shadcn-style components give a polished, consistent UI with minimal custom styling effort
 
 ## MVP Scope
+
 The MVP must support:
+
 - add recipe
 - edit recipe
 - delete recipe
@@ -78,6 +90,7 @@ The MVP must support:
 - optional account-based sync
 
 ## Non-MVP / Future Scope
+
 - import recipe from URL
 - OCR handwritten recipe import
 - shopping list generation
@@ -87,7 +100,9 @@ The MVP must support:
 - AI suggestions from available ingredients
 
 ## Definition of Done
+
 The product is complete for MVP when:
+
 - the same codebase runs on iOS, Android, and desktop/web
 - recipes persist locally
 - recipe search is responsive
@@ -97,6 +112,7 @@ The product is complete for MVP when:
 - release builds can be produced for mobile and desktop/web
 
 ## Constraints
+
 - TypeScript-first
 - Mobile-first UX
 - Offline-first data access

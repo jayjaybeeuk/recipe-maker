@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { Animated, View, ViewProps } from 'react-native'
+import { Animated, ViewProps } from 'react-native'
 
 export interface SkeletonProps extends ViewProps {
   className?: string

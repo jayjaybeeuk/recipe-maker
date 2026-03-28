@@ -3,17 +3,20 @@
 > Context: Personal recipe catalogue app. Stack: React Native + Expo, TypeScript, Expo Router, Zustand, SQLite (Expo SQLite), Supabase, Zod, React Hook Form, NativeWind. See 00-master-spec.md for full constraints. Data model in 03-data-model-and-storage.md.
 
 ## Goal
+
 Allow recipes and images to sync across devices without compromising offline-first behavior. Auth is optional — the app must work fully without an account.
 
 ## Auth
 
 ### Supabase Auth Integration
+
 - Use Supabase email/password and optionally OAuth (Google/Apple)
 - Anonymous local-only mode: app is fully functional without sign-in
 - On sign-in: trigger initial full sync (push local, pull remote)
 - On sign-out: retain local data, stop sync
 
 ### Auth Store
+
 ```typescript
 interface AuthStore {
   session: Session | null
@@ -27,18 +30,22 @@ interface AuthStore {
 ```
 
 ## Supabase Schema
+
 Remote tables mirror local SQLite structure with additions:
+
 - `user_id` column on `recipes`, `collections` for multi-user isolation
 - Row Level Security (RLS) policies: users can only read/write their own records
 - `deleted_at` column on `recipes` for tombstone sync
 
 RLS policy example for recipes:
+
 ```sql
 CREATE POLICY "Users see own recipes" ON recipes
   FOR ALL USING (auth.uid() = user_id);
 ```
 
 ## Sync Strategy (MVP: Last-Write-Wins)
+
 ```
 Push:
   1. Read all sync_queue entries with status = 'pending'
@@ -59,13 +66,14 @@ Trigger sync:
 ```
 
 ## Sync Queue Fields
+
 ```typescript
 interface SyncQueueEntry {
   id: string
   entityType: 'recipe' | 'ingredient' | 'step' | 'tag' | 'collection'
   entityId: string
   operation: 'create' | 'update' | 'delete'
-  payload: string       // JSON snapshot of entity at time of mutation
+  payload: string // JSON snapshot of entity at time of mutation
   createdAt: string
   retryCount: number
   lastError: string | null
@@ -74,6 +82,7 @@ interface SyncQueueEntry {
 ```
 
 ## Media Handling
+
 - Local: store device file URI in `recipe.imageUri` immediately after pick
 - Show local image in UI without waiting for upload
 - Upload flow (background, during sync):
@@ -84,6 +93,7 @@ interface SyncQueueEntry {
 - Retain local file as fallback if remote URL is unavailable
 
 ## Failure Handling
+
 - Local saves never blocked by sync failures
 - Sync errors shown as status in Settings screen
 - Failed queue entries auto-retry with exponential backoff (max 3 retries)
@@ -91,12 +101,14 @@ interface SyncQueueEntry {
 - Network detection via `@react-native-community/netinfo` or equivalent
 
 ## Sync Status UI (Settings Screen)
+
 - Last synced timestamp
 - Pending items count
 - Failed items count with error details
 - "Sync Now" button (disabled when offline or unauthenticated)
 
 ## Implementation Tasks
+
 - [ ] Create Supabase project, define remote schema (recipes, ingredients, steps, tags, recipe_tags, collections, collection_recipes) with user_id columns and RLS policies — output SQL migration file to `infra/sync/supabase-schema.sql`
 - [ ] Implement auth store in `infra/auth/store.ts` with signIn, signUp, signOut, restoreSession using Supabase JS client, persisting session to SecureStore
 - [ ] Build auth UI: sign-in screen (`app/(stack)/auth/sign-in.tsx`) and sign-up screen (`app/(stack)/auth/sign-up.tsx`) with React Hook Form + Zod validation and Supabase error handling

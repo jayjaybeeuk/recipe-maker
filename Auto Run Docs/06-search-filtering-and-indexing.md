@@ -3,31 +3,33 @@
 > Context: Personal recipe catalogue app. Stack: React Native + Expo, TypeScript, Expo Router, Zustand, SQLite (Expo SQLite), Supabase, Zod, React Hook Form, NativeWind. See 00-master-spec.md for full constraints. Data model in 03-data-model-and-storage.md. CRUD in 05-recipes-crud.md.
 
 ## Goal
+
 Provide fast, intuitive local recipe discovery with sub-150ms responsiveness for up to 5,000 recipes.
 
 ## Search Inputs
 
-| Input | Behavior |
-|-------|----------|
-| Free text | Match against searchText, searchIngredients, searchTags |
-| Cuisine filter | Exact match on cuisine column |
-| Meal type filter | Exact match on mealType column |
-| Tag filter | Match against searchTags or JOIN recipe_tags |
-| Favorite filter | WHERE is_favorite = 1 |
-| Quick filter | WHERE (prep_time_minutes + cook_time_minutes) <= threshold |
+| Input            | Behavior                                                   |
+| ---------------- | ---------------------------------------------------------- |
+| Free text        | Match against searchText, searchIngredients, searchTags    |
+| Cuisine filter   | Exact match on cuisine column                              |
+| Meal type filter | Exact match on mealType column                             |
+| Tag filter       | Match against searchTags or JOIN recipe_tags               |
+| Favorite filter  | WHERE is_favorite = 1                                      |
+| Quick filter     | WHERE (prep_time_minutes + cook_time_minutes) <= threshold |
 
 ## Sort Options
 
-| Key | SQL ORDER BY |
-|-----|-------------|
-| newest | created_at DESC |
-| updated | updated_at DESC |
-| favorite | is_favorite DESC, created_at DESC |
-| quickest | (prep_time_minutes + cook_time_minutes) ASC NULLS LAST |
-| rated | rating DESC NULLS LAST |
-| lastCooked | last_cooked_at DESC NULLS LAST |
+| Key        | SQL ORDER BY                                           |
+| ---------- | ------------------------------------------------------ |
+| newest     | created_at DESC                                        |
+| updated    | updated_at DESC                                        |
+| favorite   | is_favorite DESC, created_at DESC                      |
+| quickest   | (prep_time_minutes + cook_time_minutes) ASC NULLS LAST |
+| rated      | rating DESC NULLS LAST                                 |
+| lastCooked | last_cooked_at DESC NULLS LAST                         |
 
 ## Search UX
+
 - Debounced input: 150ms delay before query fires
 - Show active filter chips below search bar, each dismissible
 - "Clear all" action removes all active filters
@@ -35,7 +37,9 @@ Provide fast, intuitive local recipe discovery with sub-150ms responsiveness for
 - Recent searches: persist last 10 search terms in AsyncStorage or SQLite preferences table
 
 ## Query Strategy
+
 Build a single SQLite query from active filter state:
+
 ```sql
 SELECT r.*
 FROM recipes r
@@ -48,9 +52,11 @@ WHERE r.deleted_at IS NULL
 ORDER BY ...
 LIMIT ? OFFSET ?
 ```
+
 Use parameterized queries. No string concatenation of user input.
 
 ## Filter State Model
+
 ```typescript
 interface RecipeFilters {
   searchText: string
@@ -64,10 +70,13 @@ interface RecipeFilters {
 ```
 
 ## Available Filter Values
+
 Derive cuisine and mealType filter options dynamically from distinct values in the recipes table to keep filters relevant to what the user has actually entered.
 
 ## SQLite Indexes
+
 Ensure indexes exist on:
+
 - `recipes(deleted_at)` — all queries filter this
 - `recipes(is_favorite)`
 - `recipes(cuisine)`
@@ -80,6 +89,7 @@ Ensure indexes exist on:
 The `search_text`, `search_ingredients`, `search_tags` columns use LIKE queries — no FTS extension needed for MVP.
 
 ## Implementation Tasks
+
 - [ ] Implement `buildRecipeQuery(filters: RecipeFilters)` utility in `features/search/query-builder.ts` that produces a parameterized SQLite query string and params array from a RecipeFilters object — covering all filter combinations and sort options
 - [ ] Add `RecipeFilters` type and initial state to `features/search/store.ts` Zustand slice, with actions for setSearchText (debounced 150ms), setCuisine, setMealType, toggleTag, toggleFavorite, setMaxTotalMinutes, setSortBy, clearAll
 - [ ] Build search input component in `features/search/components/SearchInput.tsx` with debounce hook, clear button, and focus management

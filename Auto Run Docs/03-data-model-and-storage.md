@@ -5,9 +5,10 @@
 ## Entities
 
 ### Recipe
+
 ```typescript
 interface Recipe {
-  id: string                    // uuid
+  id: string // uuid
   title: string
   description: string | null
   prepTimeMinutes: number | null
@@ -18,25 +19,26 @@ interface Recipe {
   mealType: string | null
   sourceUrl: string | null
   notes: string | null
-  rating: number | null         // 1-5
+  rating: number | null // 1-5
   isFavorite: boolean
   imageUri: string | null
-  createdAt: string             // ISO-8601 UTC
-  updatedAt: string             // ISO-8601 UTC
-  lastCookedAt: string | null   // ISO-8601 UTC
-  deletedAt: string | null      // soft delete
+  createdAt: string // ISO-8601 UTC
+  updatedAt: string // ISO-8601 UTC
+  lastCookedAt: string | null // ISO-8601 UTC
+  deletedAt: string | null // soft delete
   syncStatus: 'pending' | 'synced' | 'failed'
   // Search helper columns
-  searchText: string            // normalized title + description + notes
-  searchIngredients: string     // materialized ingredient names
-  searchTags: string            // materialized tag names
+  searchText: string // normalized title + description + notes
+  searchIngredients: string // materialized ingredient names
+  searchTags: string // materialized tag names
 }
 ```
 
 ### Ingredient
+
 ```typescript
 interface Ingredient {
-  id: string      // uuid
+  id: string // uuid
   recipeId: string
   name: string
   quantity: number | null
@@ -47,9 +49,10 @@ interface Ingredient {
 ```
 
 ### Step
+
 ```typescript
 interface Step {
-  id: string      // uuid
+  id: string // uuid
   recipeId: string
   instruction: string
   durationMinutes: number | null
@@ -58,14 +61,16 @@ interface Step {
 ```
 
 ### Tag
+
 ```typescript
 interface Tag {
-  id: string      // uuid
+  id: string // uuid
   name: string
 }
 ```
 
 ### RecipeTag
+
 ```typescript
 interface RecipeTag {
   recipeId: string
@@ -74,9 +79,10 @@ interface RecipeTag {
 ```
 
 ### Collection
+
 ```typescript
 interface Collection {
-  id: string      // uuid
+  id: string // uuid
   name: string
   description: string | null
   createdAt: string
@@ -85,6 +91,7 @@ interface Collection {
 ```
 
 ### CollectionRecipe
+
 ```typescript
 interface CollectionRecipe {
   collectionId: string
@@ -93,13 +100,14 @@ interface CollectionRecipe {
 ```
 
 ### ActiveCookingSession
+
 ```typescript
 interface ActiveCookingSession {
-  id: string      // uuid
+  id: string // uuid
   recipeId: string
   servingsOverride: number | null
-  checkedIngredientIds: string    // JSON array stored as text
-  checkedStepIds: string          // JSON array stored as text
+  checkedIngredientIds: string // JSON array stored as text
+  checkedStepIds: string // JSON array stored as text
   startedAt: string
   updatedAt: string
   completedAt: string | null
@@ -107,13 +115,14 @@ interface ActiveCookingSession {
 ```
 
 ### SyncQueue
+
 ```typescript
 interface SyncQueueEntry {
   id: string
   entityType: 'recipe' | 'ingredient' | 'step' | 'tag' | 'collection'
   entityId: string
   operation: 'create' | 'update' | 'delete'
-  payload: string     // JSON
+  payload: string // JSON
   createdAt: string
   retryCount: number
   lastError: string | null
@@ -122,6 +131,7 @@ interface SyncQueueEntry {
 ```
 
 ## SQLite Tables
+
 - `recipes`
 - `ingredients`
 - `steps`
@@ -133,9 +143,11 @@ interface SyncQueueEntry {
 - `sync_queue`
 
 ## Search Index Strategy
+
 Use SQLite queries with normalized search helper fields rather than external search infrastructure.
 
 Indexed columns on `recipes`:
+
 - `search_text` — normalized lowercase title + description + notes
 - `search_ingredients` — materialized string of ingredient names
 - `search_tags` — materialized string of tag names
@@ -146,18 +158,21 @@ Indexed columns on `recipes`:
 - `last_cooked_at` (index)
 
 ## Conflict Strategy
+
 - Last-write-wins for scalar fields in MVP
 - Ingredients, steps, and tags replaced as full sets on save
 - Soft deletes via `deletedAt` / `deleted_at`
 - Future: merge-aware sync with vector clocks
 
 ## Schema Rules
+
 - Timestamps stored as ISO-8601 UTC strings
 - All IDs are UUIDs (generated client-side)
 - Foreign key constraints enforced
 - Sort order maintained by `sort_order` integer
 
 ## Implementation Tasks
+
 - [ ] Define all TypeScript interfaces in `shared/types/` for Recipe, Ingredient, Step, Tag, Collection, ActiveCookingSession, SyncQueueEntry
 - [ ] Write Zod schemas in `shared/types/` matching each interface for runtime validation
 - [ ] Create SQLite migration 001 in `infra/db/migrations/` defining all tables with correct columns, types, foreign keys, and indexes

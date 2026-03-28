@@ -5,6 +5,7 @@
 ## Testing Pyramid
 
 ### Unit Tests (Vitest)
+
 - Domain mappers (e.g., DB row → TypeScript type)
 - Zod validation schemas (valid and invalid inputs)
 - Servings scaling logic (`scaleQuantity`)
@@ -13,6 +14,7 @@
 - Date/time utilities
 
 ### Component Tests (React Native Testing Library)
+
 - RecipeCard renders title, tags, time, favorite badge
 - Recipe form validates required fields and shows inline errors
 - Filter chips render and dismiss correctly
@@ -20,6 +22,7 @@
 - Servings adjuster updates displayed quantities
 
 ### Integration Tests (Vitest + in-memory SQLite or real Expo SQLite)
+
 - Create recipe → appears in list query
 - Edit recipe → updated values returned by search
 - Soft delete → excluded from default queries
@@ -27,6 +30,7 @@
 - Offline mutation → sync queue entry created → replay on connection
 
 ### E2E Tests (Detox)
+
 - Onboard: launch app, confirm home screen loads
 - Add recipe: fill form, save, find in recipe list
 - Search recipe: type title fragment, see result, clear
@@ -35,6 +39,7 @@
 - Sign in and sync: authenticate, confirm sync status updates
 
 ## Tooling
+
 - **Vitest** — unit and integration tests
 - **React Native Testing Library** — component tests
 - **Detox** — E2E on iOS and Android
@@ -43,6 +48,7 @@
 - **TypeScript strict mode** — `"strict": true` in tsconfig
 
 ## CI Pipeline (GitHub Actions)
+
 ```yaml
 jobs:
   quality:
@@ -59,12 +65,14 @@ jobs:
 ```
 
 ## Release Targets
+
 - **iOS**: EAS Build → TestFlight → App Store
 - **Android**: EAS Build → Internal Testing → Play Store
 - **Web/Desktop Phase 1**: `expo export -p web`, host on Vercel or Netlify
 - **Desktop Phase 2**: Wrap Expo web build with Tauri
 
 ## Environment Configuration
+
 ```
 EXPO_PUBLIC_SUPABASE_URL=
 EXPO_PUBLIC_SUPABASE_ANON_KEY=
@@ -72,6 +80,7 @@ SUPABASE_SERVICE_ROLE_KEY=       # CI only, never ship to client
 ```
 
 ## Implementation Tasks
+
 - [ ] Configure Vitest in `vitest.config.ts` with React Native environment (use `vitest-environment-minidom` or equivalent), path aliases matching tsconfig, and coverage thresholds (80% for `features/` and `infra/`)
 - [ ] Configure React Native Testing Library setup file and add to Vitest config
 - [ ] Write unit test suite for `scaleQuantity` utility covering null, integer result, decimal, and fraction cases

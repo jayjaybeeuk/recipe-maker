@@ -74,6 +74,7 @@ Goal: production-ready builds with CI and test coverage.
 - [ ] Final smoke test on physical iOS and Android devices
 
 ## Required Final Artifacts
+
 - Source code in a clean git repository
 - SQLite migration files in `infra/db/migrations/`
 - Supabase schema SQL in `infra/sync/supabase-schema.sql`
