@@ -468,7 +468,7 @@
 
 ## Task 8 — Unit tests for repositories and Zod schemas
 
-- [ ] Write unit tests using Vitest. The test environment uses `node` (no React Native renderer needed for repository tests). Mock `expo-sqlite` and `expo-crypto` at the top of each repository test file using `vi.mock`.
+- [x] Write unit tests using Vitest. The test environment uses `node` (no React Native renderer needed for repository tests). Mock `expo-sqlite` and `expo-crypto` at the top of each repository test file using `vi.mock`.
 
   **`infra/db/repositories/__tests__/recipe-repository.test.ts`**
   - Mock `getDb` to return an in-memory mock DB object with `execAsync`, `runAsync`, `getFirstAsync`, `getAllAsync` methods that track calls
