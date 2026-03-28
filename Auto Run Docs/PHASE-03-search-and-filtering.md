@@ -136,7 +136,7 @@
 
 ## Task 3 — Recent search persistence and wired Search screen
 
-- [ ] Create `features/search/recent-searches.ts` using `@react-native-async-storage/async-storage`:
+- [x] Create `features/search/recent-searches.ts` using `@react-native-async-storage/async-storage`:
 
   ```typescript
   const STORAGE_KEY = 'recent_searches'
