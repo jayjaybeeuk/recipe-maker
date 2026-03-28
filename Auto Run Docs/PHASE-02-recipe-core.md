@@ -338,7 +338,7 @@
 
 ## Task 4 — Build RecipeCard component and Recipes list screen
 
-- [ ] Create `shared/components/RecipeCard.tsx`. It must extend the `rnr` Card component and display:
+- [x] Create `shared/components/RecipeCard.tsx`. It must extend the `rnr` Card component and display:
   - Recipe photo (`imageUri`) as a thumbnail using `<Image>` from `react-native` — show a warm placeholder view (`bg-brand-100`) if `imageUri` is null
   - Title in bold using the `rnr` Text component (`variant="h3"`)
   - Horizontal row of tag Badges (`rnr` Badge, `variant="secondary"`) — show up to 3 tags
