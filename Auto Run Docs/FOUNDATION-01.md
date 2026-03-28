@@ -72,7 +72,7 @@
 
 ## Task 3 — Install and configure NativeWind with warm colour palette
 
-- [ ] Install NativeWind and Tailwind CSS: `npm install nativewind tailwindcss`. Run `npx tailwindcss init` to generate `tailwind.config.js`. Configure `tailwind.config.js` content paths to include `./app/**/*.{js,jsx,ts,tsx}`, `./features/**/*.{js,jsx,ts,tsx}`, `./shared/**/*.{js,jsx,ts,tsx}`, `./infra/**/*.{js,jsx,ts,tsx}`. Add the following warm colour palette as custom theme colours in `tailwind.config.js`:
+- [x] Install NativeWind and Tailwind CSS: `npm install nativewind tailwindcss`. Run `npx tailwindcss init` to generate `tailwind.config.js`. Configure `tailwind.config.js` content paths to include `./app/**/*.{js,jsx,ts,tsx}`, `./features/**/*.{js,jsx,ts,tsx}`, `./shared/**/*.{js,jsx,ts,tsx}`, `./infra/**/*.{js,jsx,ts,tsx}`. Add the following warm colour palette as custom theme colours in `tailwind.config.js`:
 
   ```js
   colors: {
