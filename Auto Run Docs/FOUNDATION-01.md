@@ -101,7 +101,7 @@
 
 ## Task 4 — Install and configure React Native Reusables (rnr) core primitives
 
-- [ ] Install React Native Reusables and its dependencies. RNR uses a copy-paste model — install the CLI and then add the required primitives. Run: `npm install @rn-primitives/portal @rn-primitives/slot`. Then manually create the following `rnr` components in `shared/components/ui/` by following the React Native Reusables source patterns for NativeWind — create each as a proper TypeScript component file:
+- [x] Install React Native Reusables and its dependencies. RNR uses a copy-paste model — install the CLI and then add the required primitives. Run: `npm install @rn-primitives/portal @rn-primitives/slot`. Then manually create the following `rnr` components in `shared/components/ui/` by following the React Native Reusables source patterns for NativeWind — create each as a proper TypeScript component file:
 
   - `button.tsx` — Button component with `variant` prop (`default`, `outline`, `ghost`, `destructive`) and `size` prop (`sm`, `default`, `lg`)
   - `card.tsx` — Card, CardHeader, CardContent, CardFooter, CardTitle, CardDescription components

@@ -9,6 +9,8 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@rn-primitives/portal": "^1.4.0",
+    "@rn-primitives/slot": "^1.4.0",
     "expo": "55.0.10-canary-20260328-2049187",
     "expo-constants": "^55.0.10-canary-20260328-2049187",
     "expo-linking": "^55.0.10-canary-20260328-2049187",
