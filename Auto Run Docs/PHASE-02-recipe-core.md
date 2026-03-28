@@ -303,7 +303,7 @@
 
 ## Task 3 — Wire Zustand recipe store to repositories
 
-- [ ] Replace the stub `features/recipes/store.ts` with a fully wired store that calls `recipeRepository` from `infra/db/repositories/index.ts`. The store must have:
+- [x] Replace the stub `features/recipes/store.ts` with a fully wired store that calls `recipeRepository` from `infra/db/repositories/index.ts`. The store must have:
 
   ```typescript
   interface RecipeStore {
