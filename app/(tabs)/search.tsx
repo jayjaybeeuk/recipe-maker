@@ -10,7 +10,7 @@ import {
   getRecentSearches,
   removeRecentSearch,
 } from '../../features/search/recent-searches'
-import { SearchInput, FilterChips, SortSelector } from '../../features/search/components'
+import { SearchInput, FilterChips, SortSelector, FilterSheet } from '../../features/search/components'
 import { EmptyState } from '../../shared/components/EmptyState'
 import { RecipeCard } from '../../shared/components/RecipeCard'
 import { recipeRepository, tagRepository } from '../../infra/db/repositories/index'
@@ -45,6 +45,7 @@ export default function SearchScreen() {
   const [tagMap, setTagMap] = useState<Record<string, Tag[]>>({})
   const [isLoading, setIsLoading] = useState(false)
   const [inputFocused, setInputFocused] = useState(false)
+  const [filterSheetVisible, setFilterSheetVisible] = useState(false)
 
   const debouncedSearchText = useDebounce(inputValue, 150)
   const isMounted = useRef(true)
@@ -167,6 +168,13 @@ export default function SearchScreen() {
     isFavorite ||
     maxTotalMinutes !== null
 
+  const activeFilterCount =
+    (cuisine !== null ? 1 : 0) +
+    (mealType !== null ? 1 : 0) +
+    tags.length +
+    (isFavorite ? 1 : 0) +
+    (maxTotalMinutes !== null ? 1 : 0)
+
   const showRecentSearches =
     inputFocused && inputValue === '' && recentSearches.length > 0
 
@@ -195,11 +203,26 @@ export default function SearchScreen() {
         />
       </View>
 
-      {/* Sort row */}
+      {/* Sort + Filters row */}
       <View className="flex-row items-center px-4 pb-2">
         <Text className="text-sm text-gray-500 mr-2">Sort:</Text>
         <SortSelector value={sortBy} onChange={setSortBy} />
+        <View className="flex-1" />
+        <Pressable
+          onPress={() => setFilterSheetVisible(true)}
+          className="flex-row items-center ml-3"
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        >
+          <Text className="text-sm text-brand-500 font-semibold">Filters</Text>
+          {activeFilterCount > 0 ? (
+            <View className="ml-1 bg-brand-500 rounded-full w-4 h-4 items-center justify-center">
+              <Text className="text-white text-xs leading-none">{activeFilterCount}</Text>
+            </View>
+          ) : null}
+        </Pressable>
       </View>
+
+      <FilterSheet visible={filterSheetVisible} onClose={() => setFilterSheetVisible(false)} />
 
       {/* Recent searches panel */}
       {showRecentSearches ? (

@@ -232,6 +232,14 @@ export class RecipeRepository {
     return rows.map(rowToRecipe)
   }
 
+  async getDistinctValues(column: 'cuisine' | 'meal_type'): Promise<string[]> {
+    const db = getDb()
+    const rows = await db.getAllAsync<{ value: string }>(
+      `SELECT DISTINCT ${column} AS value FROM recipes WHERE deleted_at IS NULL AND ${column} IS NOT NULL ORDER BY ${column} ASC`
+    )
+    return rows.map((r) => r.value)
+  }
+
   async toggleFavorite(id: string, isFavorite: boolean): Promise<void> {
     const db = getDb()
     const now = new Date().toISOString()

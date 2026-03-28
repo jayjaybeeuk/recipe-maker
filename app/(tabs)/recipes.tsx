@@ -3,7 +3,7 @@ import { FlatList, View, TouchableOpacity, Text as RNText, Pressable } from 'rea
 import { router } from 'expo-router'
 import { useRecipeStore } from '../../features/recipes/store'
 import { useSearchStore } from '../../features/search/store'
-import { SearchInput, FilterChips, SortSelector } from '../../features/search/components'
+import { SearchInput, FilterChips, SortSelector, FilterSheet } from '../../features/search/components'
 import { recipeRepository, tagRepository } from '../../infra/db/repositories/index'
 import { RecipeCard } from '../../shared/components/RecipeCard'
 import { EmptyState } from '../../shared/components/EmptyState'
@@ -49,6 +49,14 @@ export default function RecipesScreen() {
   const [tagMap, setTagMap] = useState<Record<string, Tag[]>>({})
   const [isLoading, setIsLoading] = useState(false)
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list')
+  const [filterSheetVisible, setFilterSheetVisible] = useState(false)
+
+  const activeFilterCount =
+    (cuisine !== null ? 1 : 0) +
+    (mealType !== null ? 1 : 0) +
+    tags.length +
+    (isFavorite ? 1 : 0) +
+    (maxTotalMinutes !== null ? 1 : 0)
 
   const debouncedSearchText = useDebounce(inputValue, 150)
   const isMounted = useRef(true)
@@ -151,13 +159,26 @@ export default function RecipesScreen() {
         />
       </View>
 
-      {/* Sort row */}
+      {/* Sort + Filters row */}
       <View className="flex-row items-center px-4 pb-2">
         <RNText className="text-sm text-gray-500 mr-2">Sort:</RNText>
-        <View className="flex-1 items-end">
-          <SortSelector value={sortBy} onChange={setSortBy} />
-        </View>
+        <SortSelector value={sortBy} onChange={setSortBy} />
+        <View className="flex-1" />
+        <Pressable
+          onPress={() => setFilterSheetVisible(true)}
+          className="flex-row items-center ml-3"
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        >
+          <RNText className="text-sm text-brand-500 font-semibold">Filters</RNText>
+          {activeFilterCount > 0 ? (
+            <View className="ml-1 bg-brand-500 rounded-full w-4 h-4 items-center justify-center">
+              <RNText className="text-white text-xs leading-none">{activeFilterCount}</RNText>
+            </View>
+          ) : null}
+        </Pressable>
       </View>
+
+      <FilterSheet visible={filterSheetVisible} onClose={() => setFilterSheetVisible(false)} />
 
       <FlatList
         key={viewMode}

@@ -208,7 +208,7 @@
 
 ## Task 5 — Load distinct filter values for cuisine and mealType pickers
 
-- [ ] Add a method `getDistinctValues(column: 'cuisine' | 'meal_type'): Promise<string[]>` to `RecipeRepository` in `infra/db/repositories/recipe-repository.ts`:
+- [x] Add a method `getDistinctValues(column: 'cuisine' | 'meal_type'): Promise<string[]>` to `RecipeRepository` in `infra/db/repositories/recipe-repository.ts`:
 
   ```sql
   SELECT DISTINCT cuisine FROM recipes WHERE deleted_at IS NULL AND cuisine IS NOT NULL ORDER BY cuisine ASC
