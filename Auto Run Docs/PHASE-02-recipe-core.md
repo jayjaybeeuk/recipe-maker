@@ -363,7 +363,7 @@
 
 ## Task 5 — Build Recipe Detail screen
 
-- [ ] Replace `app/(stack)/recipes/[id].tsx` with a full detail screen:
+- [x] Replace `app/(stack)/recipes/[id].tsx` with a full detail screen:
   - Extract `id` from route params using `useLocalSearchParams` from `expo-router`
   - On mount, call `store.loadRecipeById(id)` from `useRecipeStore`
   - Show `rnr` Skeleton while loading
