@@ -442,7 +442,7 @@
 
 ## Task 7 — Build Home screen and Collections screen
 
-- [ ] Replace `app/(tabs)/index.tsx` (Home screen) with a real implementation:
+- [x] Replace `app/(tabs)/index.tsx` (Home screen) with a real implementation:
   - On mount call `store.loadRecipes({ isFavorite: true, limit: 10, sortBy: 'newest' })` for favorites and a second load for recently cooked (`sortBy: 'lastCooked', limit: 5`)
   - Use two separate local state variables or two Zustand selectors for the two lists
   - Layout (ScrollView):
