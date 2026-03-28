@@ -231,7 +231,7 @@
 
 ## Task 6 — Unit tests for the query builder
 
-- [ ] Create `features/search/__tests__/query-builder.test.ts`. Use Vitest (`describe`/`it`/`expect`). Import `buildRecipeQuery` and `RecipeFilters` from `features/search/query-builder`. No mocking needed — this is a pure function.
+- [x] Create `features/search/__tests__/query-builder.test.ts`. Use Vitest (`describe`/`it`/`expect`). Import `buildRecipeQuery` and `RecipeFilters` from `features/search/query-builder`. No mocking needed — this is a pure function.
 
   Define a base `emptyFilters: RecipeFilters` with all defaults (`searchText: ''`, `cuisine: null`, `mealType: null`, `tags: []`, `isFavorite: false`, `maxTotalMinutes: null`, `sortBy: 'newest'`).
 
