@@ -187,7 +187,7 @@
 
 ## Task 4 — Add search and filter UI to the Recipes screen
 
-- [ ] Update `app/(tabs)/recipes.tsx` to add search and filtering at the top of the screen. The Recipes screen should share the same `useSearchStore` as the Search tab so filters carry across both tabs.
+- [x] Update `app/(tabs)/recipes.tsx` to add search and filtering at the top of the screen. The Recipes screen should share the same `useSearchStore` as the Search tab so filters carry across both tabs.
 
   **Add to the Recipes screen above the FlatList:**
   1. A row containing: `SearchInput` (flex 1) + list/grid toggle button (use a simple icon text `☰` / `⊞` toggling `viewMode: 'list' | 'grid'` in local state)

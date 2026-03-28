@@ -11,10 +11,11 @@ export interface RecipeCardProps {
   tags: Tag[]
   onPress: () => void
   onToggleFavorite: () => void
+  compact?: boolean
 }
 
-export function RecipeCard({ recipe, tags, onPress, onToggleFavorite }: RecipeCardProps) {
-  const visibleTags = tags.slice(0, 3)
+export function RecipeCard({ recipe, tags, onPress, onToggleFavorite, compact = false }: RecipeCardProps) {
+  const visibleTags = tags.slice(0, compact ? 1 : 3)
 
   const totalMinutes =
     (recipe.prepTimeMinutes ?? 0) + (recipe.cookTimeMinutes ?? 0)
@@ -31,12 +32,12 @@ export function RecipeCard({ recipe, tags, onPress, onToggleFavorite }: RecipeCa
         {recipe.imageUri ? (
           <Image
             source={{ uri: recipe.imageUri }}
-            className="w-full h-40 rounded-t-2xl"
+            className={`w-full rounded-t-2xl ${compact ? 'h-24' : 'h-40'}`}
             resizeMode="cover"
           />
         ) : (
-          <View className="w-full h-40 bg-brand-100 rounded-t-2xl items-center justify-center">
-            <Text variant="h1" className="text-brand-300">
+          <View className={`w-full bg-brand-100 rounded-t-2xl items-center justify-center ${compact ? 'h-24' : 'h-40'}`}>
+            <Text variant={compact ? 'h3' : 'h1'} className="text-brand-300">
               {recipe.title.charAt(0).toUpperCase()}
             </Text>
           </View>
@@ -44,7 +45,7 @@ export function RecipeCard({ recipe, tags, onPress, onToggleFavorite }: RecipeCa
 
         <CardContent className="pt-3">
           <View className="flex-row items-start justify-between">
-            <Text variant="h3" className="flex-1 mr-2" numberOfLines={2}>
+            <Text variant={compact ? 'small' : 'h3'} className="flex-1 mr-2 font-semibold" numberOfLines={compact ? 2 : 2}>
               {recipe.title}
             </Text>
             <Button

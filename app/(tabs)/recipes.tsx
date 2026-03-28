@@ -1,12 +1,16 @@
-import React, { useEffect, useState, useCallback } from 'react'
-import { FlatList, View, TouchableOpacity, Text as RNText } from 'react-native'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
+import { FlatList, View, TouchableOpacity, Text as RNText, Pressable } from 'react-native'
 import { router } from 'expo-router'
 import { useRecipeStore } from '../../features/recipes/store'
-import { tagRepository } from '../../infra/db/repositories/index'
+import { useSearchStore } from '../../features/search/store'
+import { SearchInput, FilterChips, SortSelector } from '../../features/search/components'
+import { recipeRepository, tagRepository } from '../../infra/db/repositories/index'
 import { RecipeCard } from '../../shared/components/RecipeCard'
 import { EmptyState } from '../../shared/components/EmptyState'
 import { Skeleton } from '../../shared/components/ui/skeleton'
+import { useDebounce } from '../../shared/utils/useDebounce'
 import type { Recipe, Tag } from '../../shared/types'
+import type { RecipeFilters } from '../../features/search/query-builder'
 
 function SkeletonCard() {
   return (
@@ -21,42 +25,147 @@ function SkeletonCard() {
 }
 
 export default function RecipesScreen() {
-  const { recipes, isLoading, loadRecipes, toggleFavorite } = useRecipeStore()
-  const [tagMap, setTagMap] = useState<Record<string, Tag[]>>({})
+  const { toggleFavorite } = useRecipeStore()
+  const {
+    searchText,
+    cuisine,
+    mealType,
+    tags,
+    isFavorite,
+    maxTotalMinutes,
+    sortBy,
+    setSearchText,
+    setCuisine,
+    setMealType,
+    toggleTag,
+    setIsFavorite,
+    setMaxTotalMinutes,
+    setSortBy,
+    clearAll,
+  } = useSearchStore()
 
-  const fetchTags = useCallback(async (recipeList: Recipe[]) => {
-    const entries = await Promise.all(
-      recipeList.map(async (r) => {
-        const tags = await tagRepository.listByRecipeId(r.id)
-        return [r.id, tags] as const
-      })
-    )
-    setTagMap(Object.fromEntries(entries))
+  const [inputValue, setInputValue] = useState('')
+  const [recipes, setRecipes] = useState<Recipe[]>([])
+  const [tagMap, setTagMap] = useState<Record<string, Tag[]>>({})
+  const [isLoading, setIsLoading] = useState(false)
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list')
+
+  const debouncedSearchText = useDebounce(inputValue, 150)
+  const isMounted = useRef(true)
+
+  useEffect(() => {
+    isMounted.current = true
+    return () => {
+      isMounted.current = false
+    }
   }, [])
 
+  // Sync debounced input to store
   useEffect(() => {
-    loadRecipes()
-  }, [loadRecipes])
+    setSearchText(debouncedSearchText)
+  }, [debouncedSearchText, setSearchText])
 
+  // Load recipes when filter values change
   useEffect(() => {
-    if (recipes.length > 0) {
-      fetchTags(recipes)
-    }
-  }, [recipes, fetchTags])
+    setIsLoading(true)
+    recipeRepository
+      .listRecipes({
+        searchText: searchText || undefined,
+        cuisine: cuisine ?? undefined,
+        mealType: mealType ?? undefined,
+        tags: tags.length > 0 ? tags : undefined,
+        isFavorite: isFavorite || undefined,
+        maxTotalMinutes: maxTotalMinutes ?? undefined,
+        sortBy,
+      })
+      .then(async (list) => {
+        if (!isMounted.current) return
+        setRecipes(list)
+        const entries = await Promise.all(
+          list.map(async (r) => {
+            const recipeTags = await tagRepository.listByRecipeId(r.id)
+            return [r.id, recipeTags] as const
+          })
+        )
+        if (!isMounted.current) return
+        setTagMap(Object.fromEntries(entries))
+      })
+      .catch(() => {
+        if (isMounted.current) setRecipes([])
+      })
+      .finally(() => {
+        if (isMounted.current) setIsLoading(false)
+      })
+  }, [searchText, cuisine, mealType, tags, isFavorite, maxTotalMinutes, sortBy])
 
   const handleToggleFavorite = useCallback(
     (id: string, current: boolean) => {
       toggleFavorite(id, !current)
+      setRecipes((prev) =>
+        prev.map((r) => (r.id === id ? { ...r, isFavorite: !current } : r))
+      )
     },
     [toggleFavorite]
   )
 
+  const currentFilters: RecipeFilters = {
+    searchText: debouncedSearchText,
+    cuisine,
+    mealType,
+    tags,
+    isFavorite,
+    maxTotalMinutes,
+    sortBy,
+  }
+
   return (
     <View className="flex-1 bg-background">
+      {/* Search + view toggle row */}
+      <View className="flex-row items-center px-4 pt-4 pb-2 gap-2">
+        <View className="flex-1">
+          <SearchInput
+            value={inputValue}
+            onChangeText={setInputValue}
+            placeholder="Search recipes…"
+          />
+        </View>
+        <Pressable
+          onPress={() => setViewMode((v) => (v === 'list' ? 'grid' : 'list'))}
+          style={{ minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center' }}
+          accessibilityLabel={viewMode === 'list' ? 'Switch to grid view' : 'Switch to list view'}
+        >
+          <RNText className="text-xl text-gray-600">{viewMode === 'list' ? '⊞' : '☰'}</RNText>
+        </Pressable>
+      </View>
+
+      {/* Filter chips */}
+      <View className="px-4">
+        <FilterChips
+          filters={currentFilters}
+          onRemoveCuisine={() => setCuisine(null)}
+          onRemoveMealType={() => setMealType(null)}
+          onRemoveTag={(tag) => toggleTag(tag)}
+          onClearFavorite={() => setIsFavorite(false)}
+          onClearTime={() => setMaxTotalMinutes(null)}
+          onClearAll={clearAll}
+        />
+      </View>
+
+      {/* Sort row */}
+      <View className="flex-row items-center px-4 pb-2">
+        <RNText className="text-sm text-gray-500 mr-2">Sort:</RNText>
+        <View className="flex-1 items-end">
+          <SortSelector value={sortBy} onChange={setSortBy} />
+        </View>
+      </View>
+
       <FlatList
+        key={viewMode}
         data={isLoading ? [] : recipes}
         keyExtractor={(item) => item.id}
+        numColumns={viewMode === 'grid' ? 2 : 1}
         contentContainerStyle={{ padding: 16, flexGrow: 1 }}
+        columnWrapperStyle={viewMode === 'grid' ? { gap: 8 } : undefined}
         ListEmptyComponent={
           isLoading ? (
             <View>
@@ -75,14 +184,26 @@ export default function RecipesScreen() {
             />
           )
         }
-        renderItem={({ item }) => (
-          <RecipeCard
-            recipe={item}
-            tags={tagMap[item.id] ?? []}
-            onPress={() => router.push(`/(stack)/recipes/${item.id}`)}
-            onToggleFavorite={() => handleToggleFavorite(item.id, item.isFavorite)}
-          />
-        )}
+        renderItem={({ item }) =>
+          viewMode === 'grid' ? (
+            <View className="flex-1">
+              <RecipeCard
+                recipe={item}
+                tags={tagMap[item.id] ?? []}
+                onPress={() => router.push(`/(stack)/recipes/${item.id}`)}
+                onToggleFavorite={() => handleToggleFavorite(item.id, item.isFavorite)}
+                compact
+              />
+            </View>
+          ) : (
+            <RecipeCard
+              recipe={item}
+              tags={tagMap[item.id] ?? []}
+              onPress={() => router.push(`/(stack)/recipes/${item.id}`)}
+              onToggleFavorite={() => handleToggleFavorite(item.id, item.isFavorite)}
+            />
+          )
+        }
       />
 
       {/* Floating add button */}
