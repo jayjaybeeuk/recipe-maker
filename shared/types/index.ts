@@ -124,4 +124,16 @@ export interface RecipeQuery {
   offset?: number
 }
 
+export interface SyncQueueEntry {
+  id: string
+  entityType: 'recipe' | 'ingredient' | 'step' | 'tag' | 'collection'
+  entityId: string
+  operation: 'create' | 'update' | 'delete'
+  payload: string
+  createdAt: string
+  retryCount: number
+  lastError: string | null
+  status: 'pending' | 'failed'
+}
+
 export * from './schemas'

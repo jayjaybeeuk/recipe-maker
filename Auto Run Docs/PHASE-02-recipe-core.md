@@ -197,7 +197,7 @@
 
 ## Task 2 — Build all database repositories
 
-- [ ] Create the following repository files in `infra/db/repositories/`. All files import `getDb` from `../../migration-runner`. All IDs are generated using `expo-crypto`: `import * as Crypto from 'expo-crypto'` then `Crypto.randomUUID()`. All timestamps are `new Date().toISOString()`. Use parameterized queries (no string interpolation of user data).
+- [x] Create the following repository files in `infra/db/repositories/`. All files import `getDb` from `../../migration-runner`. All IDs are generated using `expo-crypto`: `import * as Crypto from 'expo-crypto'` then `Crypto.randomUUID()`. All timestamps are `new Date().toISOString()`. Use parameterized queries (no string interpolation of user data).
 
   **`infra/db/repositories/sync-queue-repository.ts`**
   ```typescript
