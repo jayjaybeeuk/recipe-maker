@@ -98,7 +98,7 @@
 
 ## Task 2 — Build SearchInput, FilterChips, and SortSelector components
 
-- [ ] Create `features/search/components/SearchInput.tsx`:
+- [x] Create `features/search/components/SearchInput.tsx`:
   - Wraps the `rnr` `Input` component
   - Props: `value: string`, `onChangeText: (text: string) => void`, `onSubmit?: () => void`, `placeholder?: string`, `autoFocus?: boolean`
   - Shows a clear (×) `rnr` Button `variant="ghost"` on the right when `value` is non-empty
