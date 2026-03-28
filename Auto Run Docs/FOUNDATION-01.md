@@ -328,7 +328,9 @@
 
 ## Task 8 — Configure Vitest and React Native Testing Library
 
-- [ ] Install test dependencies: `npm install -D vitest @testing-library/react-native @testing-library/jest-native @vitest/coverage-v8 react-test-renderer`. Create `vitest.config.ts` at the project root:
+- [x] Install test dependencies: `npm install -D vitest @testing-library/react-native @testing-library/jest-native @vitest/coverage-v8 react-test-renderer`.
+
+  > **Note:** `@testing-library/jest-native` is deprecated and its `extend-expect` transitively loads `react-native/index.js` which contains Flow-typed syntax (`import typeof`) that Node.js v25 cannot parse. Added `vitest.pre-setup.cjs` to patch `Module._resolveFilename` before the setup file runs, redirecting `require("react-native")` to `test-utils/react-native-mock.js`. The `vitest.config.ts` `setupFiles` array lists the pre-setup CJS file first, followed by `vitest.setup.ts`. `npm test` passes with 2 passing tests and 0 failures. Create `vitest.config.ts` at the project root:
 
   ```ts
   import { defineConfig } from 'vitest/config'
