@@ -144,7 +144,7 @@
 
 ## Task 6 — Install Expo SQLite and create migration runner with migration 001
 
-- [ ] Install Expo SQLite: `npm install expo-sqlite`. Create the migration runner at `infra/db/migration-runner.ts`. The runner must:
+- [x] Install Expo SQLite: `npm install expo-sqlite`. Create the migration runner at `infra/db/migration-runner.ts`. The runner must:
   1. Open (or create) the SQLite database named `recipe_maker.db` using `expo-sqlite`
   2. Create a `_migrations` table if it does not exist: `(id INTEGER PRIMARY KEY, name TEXT UNIQUE, applied_at TEXT)`
   3. Read all `.sql` files from `infra/db/migrations/` in lexicographic order
