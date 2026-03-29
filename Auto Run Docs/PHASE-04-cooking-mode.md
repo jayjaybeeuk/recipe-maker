@@ -111,7 +111,7 @@
 
 ## Task 3 — Replace cooking store with full implementation
 
-- [ ] Replace `features/cooking/store.ts` with a fully wired store. The store manages session state, timer countdowns (via `setInterval`), and persists checklist changes to SQLite on every toggle.
+- [x] Replace `features/cooking/store.ts` with a fully wired store. The store manages session state, timer countdowns (via `setInterval`), and persists checklist changes to SQLite on every toggle.
 
   ```typescript
   import { create } from 'zustand'

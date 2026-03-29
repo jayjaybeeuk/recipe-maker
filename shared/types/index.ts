@@ -76,6 +76,7 @@ export interface TimerState {
   totalSeconds: number
   remainingSeconds: number
   running: boolean
+  completedAt?: string
 }
 
 // Input types for create/update operations
