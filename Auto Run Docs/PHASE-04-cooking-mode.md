@@ -60,7 +60,7 @@
 
 ## Task 2 — Build CookingSessionRepository and update the repository index
 
-- [ ] Create `infra/db/repositories/cooking-session-repository.ts`. Import `getDb` from `../../migration-runner` and `Crypto` from `expo-crypto`. All timestamps are `new Date().toISOString()`.
+- [x] Create `infra/db/repositories/cooking-session-repository.ts`. Import `getDb` from `../../migration-runner` and `Crypto` from `expo-crypto`. All timestamps are `new Date().toISOString()`.
 
   **Methods:**
 

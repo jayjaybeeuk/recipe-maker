@@ -48,3 +48,11 @@ export const syncQueueRepository = {
   delete: noop,
 }
 
+export const cookingSessionRepository = {
+  createOrResume: async () => { throw new Error('Not available on web') },
+  updateChecklist: noop,
+  updateServings: noop,
+  complete: noop,
+  getActiveForRecipe: emptyNull,
+}
+
