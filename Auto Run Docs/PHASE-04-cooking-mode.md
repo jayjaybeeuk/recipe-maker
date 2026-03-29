@@ -255,7 +255,7 @@
 
 ## Task 5 — Unit tests for scaleQuantity and integration test for session lifecycle
 
-- [ ] Create `shared/utils/__tests__/servings.test.ts` using Vitest. Import `scaleQuantity` and `formatDuration` from `shared/utils/servings`. No mocking needed — pure functions.
+- [x] Create `shared/utils/__tests__/servings.test.ts` using Vitest. Import `scaleQuantity` and `formatDuration` from `shared/utils/servings`. No mocking needed — pure functions.
 
   **`scaleQuantity` tests:**
   - `scaleQuantity(null, 2)` → `''`

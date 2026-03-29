@@ -14,9 +14,12 @@ export function scaleQuantity(quantity: number | null, factor: number): string {
   const scaled = quantity * factor
 
   if (Math.round(scaled) === scaled) return String(Math.round(scaled))
-  if (Math.abs(scaled - Math.round(scaled) + 0.5) < 0.01) return '½'
-  if (Math.abs(scaled - Math.round(scaled) + 0.75) < 0.01) return '¼'
-  if (Math.abs(scaled - Math.round(scaled) + 0.25) < 0.01) return '¾'
+  // Fraction symbols only apply to pure fractions (0 < scaled < 1)
+  if (scaled > 0 && scaled < 1) {
+    if (Math.abs(scaled - 0.5) < 0.01) return '½'
+    if (Math.abs(scaled - 0.25) < 0.01) return '¼'
+    if (Math.abs(scaled - 0.75) < 0.01) return '¾'
+  }
 
   return scaled.toFixed(1).replace(/\.0$/, '')
 }
