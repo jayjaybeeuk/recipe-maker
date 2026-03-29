@@ -186,7 +186,7 @@
 
 ## Task 4 — Build the Cooking Mode screen
 
-- [ ] Replace `app/(stack)/recipes/[id]/cook.tsx` with the full cooking mode implementation.
+- [x] Replace `app/(stack)/recipes/[id]/cook.tsx` with the full cooking mode implementation.
 
   **Setup:**
   - Extract `id` from `useLocalSearchParams<{ id: string }>()`
