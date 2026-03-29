@@ -12,6 +12,7 @@ export const recipeRepository = {
   updateRecipe: async () => { throw new Error('Not available on web') },
   deleteRecipe: noop,
   toggleFavorite: noop,
+  getDistinctValues: emptyList,
 }
 
 export const ingredientRepository = {
@@ -26,26 +27,24 @@ export const stepRepository = {
 
 export const tagRepository = {
   listByRecipeId: emptyList,
-  listAll: emptyList,
   findOrCreate: async () => { throw new Error('Not available on web') },
-  syncForRecipe: noop,
+  reconcileForRecipe: emptyList,
 }
 
 export const collectionRepository = {
-  listAll: emptyList,
-  getById: emptyNull,
-  create: async () => { throw new Error('Not available on web') },
-  update: async () => { throw new Error('Not available on web') },
-  delete: noop,
-  addRecipe: noop,
-  removeRecipe: noop,
+  listCollections: emptyList,
+  createCollection: async () => { throw new Error('Not available on web') },
+  addRecipeToCollection: noop,
+  removeRecipeFromCollection: noop,
+  listRecipesInCollection: emptyList,
+  deleteCollection: noop,
 }
 
 export const syncQueueRepository = {
   enqueue: noop,
-  listPending: emptyList,
+  dequeuePending: emptyList,
   markFailed: noop,
-  delete: noop,
+  clearEntry: noop,
 }
 
 export const cookingSessionRepository = {
