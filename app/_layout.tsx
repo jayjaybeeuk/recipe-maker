@@ -8,10 +8,9 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { runMigrations } from '../infra/db/migration-runner'
 
 export default function RootLayout() {
-  const [dbReady, setDbReady] = useState(Platform.OS === 'web')
+  const [dbReady, setDbReady] = useState(false)
 
   useEffect(() => {
-    if (Platform.OS === 'web') return
     runMigrations()
       .then(() => setDbReady(true))
       .catch((err: unknown) => {
