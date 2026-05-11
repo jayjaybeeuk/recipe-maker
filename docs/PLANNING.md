@@ -42,6 +42,47 @@ Unify the storage layer so web and native share the same SQLite-based repositori
 4. **Test thoroughly** on Chrome, Firefox, Safari
 5. **Optional**: Add a capability check — if OPFS is unavailable, fall back to localStorage stubs with a warning
 
+### Task: Browser Compatibility Gate
+
+**Summary:** On app load, detect whether the browser supports OPFS (required for expo-sqlite/web). If not supported, block the entire UI and show a clear unsupported-browser message.
+
+**Detection Logic:**
+- Check for `navigator.storage?.getDirectory` (OPFS API availability)
+- Verify the app is running in a secure context (`window.isSecureContext`) with cross-origin isolation (`window.crossOriginIsolated`)
+- If either check fails → browser is unsupported
+
+**Unsupported Browser Behavior:**
+- Render a full-screen "Browser Not Supported" message
+- No other UI should be shown — no navigation, no forms, no app shell. Just the message.
+- The message should list compatible browsers:
+  - Chrome 86+
+  - Edge 86+
+  - Firefox 111+
+  - Safari 15.2+
+- Note that Firefox private browsing mode is **not supported** (OPFS is unavailable in private windows)
+
+**Implementation:**
+- Create a `BrowserCompatibilityGate` React component at `components/BrowserCompatibilityGate.tsx`
+- This component wraps the app root in `app/_layout.tsx`
+- On mount, run the OPFS capability checks
+- If supported → render `children`
+- If not supported → render the unsupported message (styled as a centered, full-screen overlay)
+- Create an `UnsupportedBrowserScreen` component at `components/UnsupportedBrowserScreen.tsx` for the message UI
+
+**Files to create/modify:**
+- `components/BrowserCompatibilityGate.tsx` — gate component with detection logic
+- `components/UnsupportedBrowserScreen.tsx` — the unsupported browser message UI
+- `app/_layout.tsx` — wrap root layout with the gate component
+- `utils/checkBrowserCompatibility.ts` — pure function for the OPFS/secure-context checks (testable in isolation)
+
+**Acceptance Criteria:**
+- [ ] On supported browsers (Chrome 86+, Edge 86+, Firefox 111+, Safari 15.2+), the app loads normally
+- [ ] On unsupported browsers, a full-screen message is shown with no other UI visible
+- [ ] The message lists compatible browsers and notes Firefox private browsing is unsupported
+- [ ] The detection check runs before any SQLite initialization
+- [ ] The gate component is platform-aware — on native (iOS/Android), it always renders children (OPFS check is web-only)
+- [ ] The compatibility check function has unit tests
+
 ### Risks and Caveats
 
 - **Cross-origin headers** may break third-party embeds/scripts (e.g., analytics, auth popups) — test carefully
