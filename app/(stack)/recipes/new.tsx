@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Platform } from 'react-native'
 import { Stack, router } from 'expo-router'
 import { RecipeForm } from '../../../features/recipes/components/RecipeForm'
 import type { RecipeFormValues } from '../../../shared/types/schemas'
@@ -37,7 +38,11 @@ export default function AddRecipeScreen() {
         })),
         tags: values.tags,
       })
-      router.back()
+      if (Platform.OS === 'web') {
+        router.replace('/(tabs)/recipes')
+      } else {
+        router.back()
+      }
     } finally {
       setIsSubmitting(false)
     }
