@@ -6,8 +6,17 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Stack } from 'expo-router'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { runMigrations } from '../infra/db/migration-runner'
+import BrowserCompatibilityGate from '../components/BrowserCompatibilityGate'
 
 export default function RootLayout() {
+  return (
+    <BrowserCompatibilityGate>
+      <RootLayoutInner />
+    </BrowserCompatibilityGate>
+  )
+}
+
+function RootLayoutInner() {
   const [dbReady, setDbReady] = useState(false)
 
   useEffect(() => {
