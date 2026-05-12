@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
@@ -6,13 +5,34 @@ import { useAuth } from '@/features/auth/AuthContext'
 
 export default function LoginScreen() {
   const router = useRouter()
-  const { signIn, user } = useAuth()
+  const { signIn, signOut, user } = useAuth()
 
-  useEffect(() => {
-    if (user) {
-      router.back()
-    }
-  }, [user])
+  if (user) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Ionicons name="restaurant-outline" size={64} color="#E85D3A" />
+          <Text style={styles.title}>Recipe Maker</Text>
+        </View>
+
+        <View style={styles.userCard}>
+          <Text style={styles.userName}>{user.name}</Text>
+          <Text style={styles.userEmail}>{user.email}</Text>
+        </View>
+
+        <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
+          <Text style={styles.signOutText}>Sign Out</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.skipLink}
+          onPress={() => router.back()}
+        >
+          <Text style={styles.skipText}>Back to recipes</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
 
   return (
     <View style={styles.container}>
@@ -96,5 +116,38 @@ const styles = StyleSheet.create({
   skipText: {
     color: '#4285F4',
     fontSize: 14,
+  },
+  userCard: {
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    borderRadius: 12,
+    padding: 20,
+    width: '100%',
+    maxWidth: 320,
+    marginBottom: 24,
+  },
+  userName: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#1a1a1a',
+  },
+  userEmail: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 4,
+  },
+  signOutButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    backgroundColor: '#e0e0e0',
+    width: '100%',
+    maxWidth: 320,
+    alignItems: 'center',
+  },
+  signOutText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
   },
 })
