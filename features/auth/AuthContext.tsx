@@ -47,12 +47,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     redirectUri,
   })
 
+  // Load stored user on mount, and check for OAuth redirect hash on web
   useEffect(() => {
-    getUser()
-      .then((stored) => {
-        if (stored) setUser(stored as User)
-      })
-      .finally(() => setIsLoading(false))
+    const init = async () => {
+      // Check if we're returning from a Google OAuth redirect (token in URL hash)
+      if (Platform.OS === 'web' && window.location.hash) {
+        const params = new URLSearchParams(window.location.hash.substring(1))
+        const accessToken = params.get('access_token')
+        if (accessToken) {
+          console.log('[Auth] Found access_token in URL hash, fetching user info')
+          // Clean up the URL
+          window.history.replaceState(null, '', window.location.pathname)
+          await fetchUserInfo(accessToken)
+          setIsLoading(false)
+          return
+        }
+      }
+
+      const stored = await getUser()
+      if (stored) setUser(stored as User)
+      setIsLoading(false)
+    }
+    init()
   }, [])
 
   useEffect(() => {
