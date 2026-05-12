@@ -8,6 +8,7 @@ import { Button } from '../../shared/components/ui/button'
 import { EmptyState } from '../../shared/components/EmptyState'
 import { Skeleton } from '../../shared/components/ui/skeleton'
 import type { Collection } from '../../shared/types'
+import { useAuth } from '../../features/auth/AuthContext'
 
 function SkeletonCollectionCard() {
   return (
@@ -25,6 +26,7 @@ export default function CollectionsScreen() {
   const [isLoading, setIsLoading] = useState(true)
   const [androidModalVisible, setAndroidModalVisible] = useState(false)
   const [newCollectionName, setNewCollectionName] = useState('')
+  const { user } = useAuth()
 
   const loadCollections = useCallback(async () => {
     setIsLoading(true)
@@ -95,7 +97,7 @@ export default function CollectionsScreen() {
             <EmptyState
               title="No Collections Yet"
               message="Group your favourite recipes into collections."
-              action={{ label: 'Create Collection', onPress: handleCreatePress }}
+              action={user ? { label: 'Create Collection', onPress: handleCreatePress } : undefined}
             />
           )
         }
@@ -122,14 +124,16 @@ export default function CollectionsScreen() {
       />
 
       {/* Floating add button */}
-      <TouchableOpacity
-        onPress={handleCreatePress}
-        className="absolute bottom-6 right-6 w-14 h-14 bg-brand-500 rounded-full items-center justify-center shadow-lg"
-        accessibilityLabel="Create collection"
-        accessibilityRole="button"
-      >
-        <RNText className="text-white text-3xl leading-none">+</RNText>
-      </TouchableOpacity>
+      {user && (
+        <TouchableOpacity
+          onPress={handleCreatePress}
+          className="absolute bottom-6 right-6 w-14 h-14 bg-brand-500 rounded-full items-center justify-center shadow-lg"
+          accessibilityLabel="Create collection"
+          accessibilityRole="button"
+        >
+          <RNText className="text-white text-3xl leading-none">+</RNText>
+        </TouchableOpacity>
+      )}
 
       {/* Android modal for collection name */}
       {Platform.OS !== 'ios' && (

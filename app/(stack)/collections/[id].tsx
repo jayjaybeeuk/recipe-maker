@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { FlatList, View } from 'react-native'
+import { Alert, FlatList, TouchableOpacity, View, Text as RNText } from 'react-native'
 import { router, useLocalSearchParams, useNavigation } from 'expo-router'
 import { collectionRepository, tagRepository } from '../../../infra/db/repositories/index'
 import { RecipeCard } from '../../../shared/components/RecipeCard'
 import { EmptyState } from '../../../shared/components/EmptyState'
 import { Skeleton } from '../../../shared/components/ui/skeleton'
 import { useRecipeStore } from '../../../features/recipes/store'
+import { useAuth } from '../../../features/auth/AuthContext'
 import type { Recipe, Tag } from '../../../shared/types'
 
 function SkeletonCard() {
@@ -24,7 +25,9 @@ export default function CollectionDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const navigation = useNavigation()
   const { toggleFavorite } = useRecipeStore()
+  const { user } = useAuth()
   const [recipes, setRecipes] = useState<Recipe[]>([])
+  const [collectionName, setCollectionName] = useState('')
   const [tagMap, setTagMap] = useState<Record<string, Tag[]>>({})
   const [isLoading, setIsLoading] = useState(true)
 
@@ -40,6 +43,7 @@ export default function CollectionDetailScreen() {
       const collection = collections.find((c) => c.id === id)
       if (collection) {
         navigation.setOptions({ title: collection.name })
+        setCollectionName(collection.name)
       }
 
       const entries = await Promise.all(
@@ -67,6 +71,24 @@ export default function CollectionDetailScreen() {
     },
     [toggleFavorite]
   )
+
+  const handleDeleteCollection = useCallback(() => {
+    Alert.alert(
+      'Delete Collection',
+      `Are you sure you want to delete "${collectionName}"? The recipes inside will not be deleted.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            await collectionRepository.deleteCollection(id)
+            router.back()
+          },
+        },
+      ]
+    )
+  }, [id, collectionName])
 
   return (
     <View className="flex-1 bg-background">
@@ -101,6 +123,17 @@ export default function CollectionDetailScreen() {
           />
         )}
       />
+
+      {user && (
+        <TouchableOpacity
+          onPress={handleDeleteCollection}
+          className="absolute bottom-6 right-6 w-14 h-14 bg-red-500 rounded-full items-center justify-center shadow-lg"
+          accessibilityLabel="Delete collection"
+          accessibilityRole="button"
+        >
+          <RNText className="text-white text-2xl leading-none">🗑</RNText>
+        </TouchableOpacity>
+      )}
     </View>
   )
 }
