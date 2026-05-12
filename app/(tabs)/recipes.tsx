@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react'
+import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react'
 import { FlatList, View, TouchableOpacity, Text as RNText, Pressable } from 'react-native'
 import { router } from 'expo-router'
 import { useRecipeStore } from '../../features/recipes/store'
+import { useAuth } from '../../features/auth/AuthContext'
 import { useSearchStore } from '../../features/search/store'
 import { SearchInput, FilterChips, SortSelector, FilterSheet } from '../../features/search/components'
 import { recipeRepository, tagRepository } from '../../infra/db/repositories/index'
@@ -43,6 +44,8 @@ export default function RecipesScreen() {
     setSortBy,
     clearAll,
   } = useSearchStore()
+
+  const { user } = useAuth()
 
   const [inputValue, setInputValue] = useState('')
   const [recipes, setRecipes] = useState<Recipe[]>([])
@@ -198,10 +201,10 @@ export default function RecipesScreen() {
             <EmptyState
               title="No Recipes Yet"
               message="Start building your cookbook by adding your first recipe."
-              action={{
+              action={user ? {
                 label: 'Add Recipe',
                 onPress: () => router.push('/(stack)/recipes/new'),
-              }}
+              } : undefined}
             />
           )
         }
@@ -228,14 +231,16 @@ export default function RecipesScreen() {
       />
 
       {/* Floating add button */}
-      <TouchableOpacity
-        onPress={() => router.push('/(stack)/recipes/new')}
-        className="absolute bottom-6 right-6 w-14 h-14 bg-brand-500 rounded-full items-center justify-center shadow-lg"
-        accessibilityLabel="Add recipe"
-        accessibilityRole="button"
-      >
-        <RNText className="text-white text-3xl leading-none">+</RNText>
-      </TouchableOpacity>
+      {user && (
+        <TouchableOpacity
+          onPress={() => router.push('/(stack)/recipes/new')}
+          className="absolute bottom-6 right-6 w-14 h-14 bg-brand-500 rounded-full items-center justify-center shadow-lg"
+          accessibilityLabel="Add recipe"
+          accessibilityRole="button"
+        >
+          <RNText className="text-white text-3xl leading-none">+</RNText>
+        </TouchableOpacity>
+      )}
     </View>
   )
 }

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { FlatList, Platform, ScrollView, TouchableOpacity, View, Text as RNText } from 'react-native'
 import { router } from 'expo-router'
+import { useAuth } from '../../features/auth/AuthContext'
 import { tagRepository } from '../../infra/db/repositories/index'
 import { recipeRepository } from '../../infra/db/repositories/index'
 import { RecipeCard } from '../../shared/components/RecipeCard'
@@ -37,6 +38,7 @@ function CompactSkeletonCard() {
 
 export default function HomeScreen() {
   const { toggleFavorite } = useRecipeStore()
+  const { user } = useAuth()
   const [favorites, setFavorites] = useState<Recipe[]>([])
   const [recentlyCooked, setRecentlyCooked] = useState<Recipe[]>([])
   const [favTagMap, setFavTagMap] = useState<Record<string, Tag[]>>({})
@@ -171,11 +173,13 @@ export default function HomeScreen() {
         >
           Browse All Recipes
         </Button>
-        <Button
-          onPress={() => router.push('/(stack)/recipes/new')}
-        >
-          Add Recipe
-        </Button>
+        {user && (
+          <Button
+            onPress={() => router.push('/(stack)/recipes/new')}
+          >
+            Add Recipe
+          </Button>
+        )}
       </View>
     </ScrollView>
   )
