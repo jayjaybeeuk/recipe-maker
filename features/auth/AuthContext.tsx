@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import * as Google from 'expo-auth-session/providers/google'
 import * as WebBrowser from 'expo-web-browser'
+import { makeRedirectUri } from 'expo-auth-session'
+import { Platform } from 'react-native'
 import { saveUser, getUser, clearUser, saveToken, clearToken } from './auth-store'
 
 WebBrowser.maybeCompleteAuthSession()
@@ -34,8 +36,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  const redirectUri = makeRedirectUri({
+    scheme: 'recipemaker',
+    path: 'auth',
+  })
+
+  console.log('[Auth] redirectUri:', redirectUri, 'platform:', Platform.OS)
+
   const [request, response, promptAsync] = Google.useAuthRequest({
     webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+    redirectUri: Platform.OS === 'web' ? redirectUri : undefined,
   })
 
   useEffect(() => {
@@ -47,6 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   useEffect(() => {
+    console.log('[Auth] response changed:', response?.type, response)
     if (response?.type === 'success') {
       const { authentication } = response
       if (authentication?.accessToken) {
