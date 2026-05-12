@@ -34,10 +34,15 @@
         {
           "enableFTS": true,
           "useSQLCipher": false,
-          "android": { "enableCustomBuildFlags": false },
-          "ios": { "customBuildFlags": [] }
+          "android": {
+            "enableCustomBuildFlags": false
+          },
+          "ios": {
+            "customBuildFlags": []
+          }
         }
-      ]
+      ],
+      "expo-web-browser"
     ]
   }
 }

@@ -7,11 +7,14 @@ import { Stack } from 'expo-router'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { runMigrations } from '../infra/db/migration-runner'
 import BrowserCompatibilityGate from '../components/BrowserCompatibilityGate'
+import AuthGate from '../components/AuthGate'
 
 export default function RootLayout() {
   return (
     <BrowserCompatibilityGate>
-      <RootLayoutInner />
+      <AuthGate>
+        <RootLayoutInner />
+      </AuthGate>
     </BrowserCompatibilityGate>
   )
 }
