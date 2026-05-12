@@ -36,16 +36,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  const redirectUri = makeRedirectUri({
-    scheme: 'recipemaker',
-    path: 'auth',
-  })
+  const redirectUri = Platform.OS === 'web'
+    ? window.location.origin
+    : makeRedirectUri({ scheme: 'recipemaker' })
 
-  console.log('[Auth] redirectUri:', redirectUri, 'platform:', Platform.OS)
+  console.log('[Auth] redirectUri:', redirectUri)
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-    redirectUri: Platform.OS === 'web' ? redirectUri : undefined,
+    redirectUri,
   })
 
   useEffect(() => {
