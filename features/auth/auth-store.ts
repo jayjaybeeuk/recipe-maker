@@ -40,7 +40,7 @@ export async function saveUser(user: object): Promise<void> {
   }
 }
 
-export async function getUser(): Promise<object | null> {
+export async function getUser(): Promise<{ id: string; email: string; name: string; avatarUrl?: string } | null> {
   let json: string | null
   if (Platform.OS === 'web') {
     json = localStorage.getItem(USER_KEY)

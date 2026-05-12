@@ -1,16 +1,18 @@
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native'
+import { useEffect } from 'react'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
+import { useAuth } from '@/features/auth/AuthContext'
 
 export default function LoginScreen() {
   const router = useRouter()
+  const { signIn, user } = useAuth()
 
-  const handleGoogleSignIn = () => {
-    Alert.alert(
-      'Coming Soon',
-      'Google Sign-In coming soon - requires backend setup'
-    )
-  }
+  useEffect(() => {
+    if (user) {
+      router.back()
+    }
+  }, [user])
 
   return (
     <View style={styles.container}>
@@ -20,7 +22,7 @@ export default function LoginScreen() {
         <Text style={styles.subtitle}>Save & organize your favourite recipes</Text>
       </View>
 
-      <TouchableOpacity style={styles.googleButton} onPress={handleGoogleSignIn}>
+      <TouchableOpacity style={styles.googleButton} onPress={signIn}>
         <Text style={styles.googleIcon}>G</Text>
         <Text style={styles.googleButtonText}>Sign in with Google</Text>
       </TouchableOpacity>

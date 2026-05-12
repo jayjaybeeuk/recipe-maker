@@ -1,6 +1,9 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
-import { Alert } from 'react-native'
-import { saveUser, getUser, clearUser, clearToken } from './auth-store'
+import * as Google from 'expo-auth-session/providers/google'
+import * as WebBrowser from 'expo-web-browser'
+import { saveUser, getUser, clearUser, saveToken, clearToken } from './auth-store'
+
+WebBrowser.maybeCompleteAuthSession()
 
 export type User = {
   id: string
@@ -31,6 +34,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+  })
+
   useEffect(() => {
     getUser()
       .then((stored) => {
@@ -39,13 +46,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .finally(() => setIsLoading(false))
   }, [])
 
+  useEffect(() => {
+    if (response?.type === 'success') {
+      const { authentication } = response
+      if (authentication?.accessToken) {
+        fetchUserInfo(authentication.accessToken)
+      }
+    }
+  }, [response])
+
+  const fetchUserInfo = async (accessToken: string) => {
+    try {
+      const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
+      const info = await res.json()
+      const mappedUser: User = {
+        id: info.sub,
+        email: info.email,
+        name: info.name,
+        avatarUrl: info.picture,
+      }
+      await saveUser(mappedUser)
+      await saveToken(accessToken)
+      setUser(mappedUser)
+      console.log('[Auth] signIn success', mappedUser.email)
+    } catch (err) {
+      console.error('[Auth] Failed to fetch user info', err)
+    }
+  }
+
   const signIn = useCallback(() => {
-    Alert.alert(
-      'Coming Soon',
-      'Google Sign-In coming soon - requires backend setup'
-    )
-    console.log('[Auth] signIn called — stub, no backend yet')
-  }, [])
+    promptAsync()
+  }, [promptAsync])
 
   const signOut = useCallback(async () => {
     await clearUser()
