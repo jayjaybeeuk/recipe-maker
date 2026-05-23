@@ -27,7 +27,8 @@ function loadJson<T>(key: string): T[] {
 export async function migrateLocalStorageToSqlite(): Promise<void> {
   if (Platform.OS !== 'web') return
   if (typeof localStorage === 'undefined') return
-  if (!localStorage.getItem(LS_KEYS.recipes)) return
+  const hasLegacyData = Object.values(LS_KEYS).some((key) => localStorage.getItem(key) !== null)
+  if (!hasLegacyData) return
   if (localStorage.getItem(MIGRATED_KEY) === 'true') return
 
   const db = getDb()
