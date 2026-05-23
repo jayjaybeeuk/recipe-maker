@@ -6,6 +6,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Stack } from 'expo-router'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { runMigrations } from '../infra/db/migration-runner'
+import { migrateLocalStorageToSqlite } from '../infra/db/migrations/migrate-localstorage-to-sqlite'
 import BrowserCompatibilityGate from '../components/BrowserCompatibilityGate'
 import AuthGate from '../components/AuthGate'
 
@@ -24,6 +25,7 @@ function RootLayoutInner() {
 
   useEffect(() => {
     runMigrations()
+      .then(() => migrateLocalStorageToSqlite())
       .then(() => setDbReady(true))
       .catch((err: unknown) => {
         throw new Error(`Migration failed: ${String(err)}`)
